@@ -9,7 +9,12 @@ class ProductController extends Controller
 {
     //Listing all products
     public function index(){
-        return response()->json(Product::with('category')->get());
+        $products = Product::with('category:id,name')->get()
+        ->map(function($p) {
+            $p->category_name = $p->category->name ?? null;
+            return $p;
+        });
+        return response()->json($products);
     }
 
     //Adding A New Product

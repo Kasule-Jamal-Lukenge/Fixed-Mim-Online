@@ -46,6 +46,11 @@
         Route::put('/admin/categories/{id}', [CategoryController::class, 'update']);
         Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy']);
 
+        Route::get('/admin/products', [ProductController::class, 'index']);
+        Route::post('/admin/products', [ProductController::class, 'store']);
+        Route::put('/admin/products/{id}', [ProductController::class, 'update']);
+        Route::delete('/admin/products/{id}', [ProductController::class, 'destroy']);
+
         Route::get('/admin/analytics/orders/week', [AnalyticsController::class, 'ordersPerWeek']);
         Route::get('/admin/analytics/orders/month', [AnalyticsController::class, 'ordersPerMonth']);
         Route::get('/admin/analytics/orders/year', [AnalyticsController::class, 'ordersPerYear']);
