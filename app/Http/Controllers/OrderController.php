@@ -92,10 +92,18 @@ class OrderController extends Controller
     }
 
     //view all orders
+    // public function allOrders(){
+    //     $orders = Order::with(['user', 'items.product'])
+    //                 ->orderBy('created_at', 'desc')
+    //                 ->get();
+
+    //     return response()->json($orders);
+    // }
+
     public function allOrders(){
-        $orders = Order::with(['user', 'items.product'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        $orders = Order::with(['user:id,first_name,last_name,email', 'items.product:id,name,price'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json($orders);
     }
@@ -133,4 +141,27 @@ class OrderController extends Controller
             'order' => $order->load(['user', 'items.product']),
         ]);
     }
+
+//     public function orders(){
+//     $orders = Order::with(['user:id,name', 'product:id,name'])
+//         ->orderBy('created_at', 'desc')
+//         ->get();
+
+//     return response()->json($orders);
+// }
+
+// public function updateStatus(Request $request, $id)
+// {
+//     $request->validate(['status' => 'required|string|in:Received,In-Delivery,Delivered']);
+
+//     $order = Order::find($id);
+//     if (!$order) {
+//         return response()->json(['message' => 'Order not found'], 404);
+//     }
+
+//     $order->status = $request->status;
+//     $order->save();
+
+//     return response()->json(['message' => 'Order status updated successfully', 'order' => $order], 200);
+// }
 }
