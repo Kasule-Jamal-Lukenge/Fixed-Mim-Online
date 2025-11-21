@@ -60,6 +60,10 @@ class OrderController extends Controller
             foreach($orderItems as $item){
                 $item['order_id'] = $order->id;
                 OrderItem::create($item);
+
+                // Incrementing the sold count for each product
+                Product::where('id', $item['product_id'])
+                    ->increment('sold_count', $item['quantity']);
             }
 
             DB::commit();

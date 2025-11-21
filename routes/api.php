@@ -12,6 +12,7 @@
     //Buyers Can As well View These
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/popular', [ProductController::class, 'popular']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
 
     Route::middleware('auth:sanctum')->group(function () {

@@ -81,4 +81,14 @@ class ProductController extends Controller
 
         return response()->json(['message' => "Product Deleted Successfully."]);
     }
+
+    public function popular(){
+        //determining the most popular items by use of a sold product count
+        $popularProducts = Product::orderBy('sold_count', 'desc')
+            ->take(8) // limit to 8 top-selling products
+            ->get(['id', 'name', 'price', 'image_url', 'sold_count']);
+
+        return response()->json($popularProducts);
+    }
+
 }
