@@ -164,4 +164,18 @@ class OrderController extends Controller
 
 //     return response()->json(['message' => 'Order status updated successfully', 'order' => $order], 200);
 // }
+
+public function destroy($id)
+{
+    $order = Order::find($id);
+
+    if (!$order) {
+        return response()->json(['message' => 'Order not found'], 404);
+    }
+
+    $order->delete();
+
+    return response()->json(['message' => 'Order deleted successfully']);
+}
+
 }

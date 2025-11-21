@@ -40,6 +40,7 @@
         Route::get('/admin/orders', [OrderController::class, 'allOrders']);
         Route::get('/admin/orders/{id}', [OrderController::class, 'viewOrder']);
         Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus']);
+        Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy']);
 
         Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::post('/admin/categories', [CategoryController::class, 'store']);
