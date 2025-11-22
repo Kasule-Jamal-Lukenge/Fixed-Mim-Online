@@ -9,9 +9,11 @@ class ProductController extends Controller
 {
     //Listing all products
     public function index(){
-        $products = Product::with('category:id,name')->get()
-        ->map(function($p) {
+        $products = Product::with('category:id,name')->get()->map(function($p) {
             $p->category_name = $p->category->name ?? null;
+            if ($p->image_url) {
+                $p->image_url = asset($p->image_url);
+            }
             return $p;
         });
         return response()->json($products);
@@ -24,10 +26,25 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|string'
+            // 'image' => 'nullable|string'
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $product = Product::create($request->all());
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
+        // $product = Product::create($request->all());
+
+        $product = Product::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'category_id' => $request->category_id,
+            'image_url' => $imagePath ? '/storage/' . $imagePath : null,
+        ]);
 
         return response()->json([
             'message' => 'Product created successfully.',
