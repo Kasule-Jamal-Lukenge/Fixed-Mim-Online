@@ -103,7 +103,11 @@ class ProductController extends Controller
         //determining the most popular items by use of a sold product count
         $popularProducts = Product::orderBy('sold_count', 'desc')
             ->take(8) // limit to 8 top-selling products
-            ->get(['id', 'name', 'price', 'image_url', 'sold_count']);
+            ->get(['id', 'name', 'price', 'image_url', 'sold_count'])
+            ->map(function ($product){
+                $product->image_url = $product->image_url ? asset($product->image_url) : null;
+                return $product;
+            });
 
         return response()->json($popularProducts);
     }
