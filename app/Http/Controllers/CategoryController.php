@@ -9,7 +9,12 @@ class CategoryController extends Controller
 {
     //Listing all Categories
     public function index(){
-        return response()->json(Category::all());
+        $categories = Category::all()->map(function ($cat){
+            $cat->image_url = $cat->image_url?asset($cat->image_url):null;
+            return $cat;
+        });
+        // return response()->json(Category::all());
+        return response()->json($categories);
     }
 
     //Adding A New Category (Only Admin)
