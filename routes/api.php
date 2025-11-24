@@ -5,6 +5,7 @@
     use App\Http\Controllers\ProductController;
     use App\Http\Controllers\OrderController;
     use App\Http\Controllers\AnalyticsController;
+    use App\Http\Controllers\PaymentController;
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -14,6 +15,8 @@
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/popular', [ProductController::class, 'popular']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
+    Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
+
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
