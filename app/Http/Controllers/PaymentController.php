@@ -30,6 +30,7 @@ class PaymentController extends Controller{
 
             $session = Session::create([
                 'payment_method_types' => ['card'],
+                'locale' => 'en',
                 'line_items' => $lineItems,
                 'mode' => 'payment',
                 'success_url' => $YOUR_DOMAIN . '/payment-sucess',
@@ -38,8 +39,33 @@ class PaymentController extends Controller{
 
             return response()->json(['url' => $session->url]);
         }catch(\Exception $e){
-            Log::error('Stripe Checkout Error:' . $e->getMessage());
+            Log::error('Stripe Checkout :' . $e->getMessage());
             return response()->json(['error' => 'Payment Initialization Failed'], 500);
         }
+    }
+
+    public function createPayPalOrder(Request $request){
+        $amount = $request->amount;
+
+        $response = Http::withBasicAuth(env('PAYPAL_CLIENT_ID'), env('PAYPAL_SECRET'))
+        ->post(env('PAYPAL_API_URL').'/v2/checkout/orders', [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [[
+                'amount' => [
+                    'currency_code' => 'USD',
+                    'value' => $amount,
+                ],
+            ]],
+        ]);
+
+        return response()->json($response->json());
+    }
+
+    public function capturePayPalOrder(Request $request){
+        $orderId = $request->orderID;
+        $response = Http::withBasicAuth(env('PAYPAL_CLIENT_ID'), env('PAYPAL_SECRET'))
+        ->post(env('PAYPAL_API_URL')."/v2/checkout/orders/{$orderId}/capture");
+
+        return response()->json($response->json());
     }
 }

@@ -15,8 +15,12 @@
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/popular', [ProductController::class, 'popular']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
-    Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
+    // Debit and Credit Card Payment Integration With Stripe
+    Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
+    // PayPal Payment Integration
+    Route::post('/paypal/create-order', [PaymentController::class, 'createPayPalOrder']);
+    Route::post('/paypal/capture-order', [PaymentController::class, 'capturePayPalOrder']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
