@@ -6,6 +6,7 @@
     use App\Http\Controllers\OrderController;
     use App\Http\Controllers\AnalyticsController;
     use App\Http\Controllers\PaymentController;
+    use App\Http\Controllers\UserController;
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -50,6 +51,8 @@
         Route::get('/admin/orders/{id}', [OrderController::class, 'viewOrder']);
         Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus']);
         Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy']);
+
+        Route::get('/admin/customers', [UserController::class, 'allCustomers']);
 
         Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::post('/admin/categories', [CategoryController::class, 'store']);
