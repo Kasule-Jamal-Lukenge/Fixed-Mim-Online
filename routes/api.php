@@ -30,6 +30,7 @@
         Route::get('/orders', [OrderController::class, 'index']);
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{id}', [OrderController::class, 'show']);
+        Route::put('/orders/{id}/update-items', [OrderController::class, 'updateItems']);
 
         //  Admin-only CRUD
         Route::middleware('admin')->group(function () {

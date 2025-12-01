@@ -69,7 +69,7 @@ class OrderController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Order placed successfully.',
+                'message' => 'Order Placed Successfully.',
                 'order' => $order->load('items.product')
             ], 201);
         }catch (\Exception $e) {
@@ -81,9 +81,38 @@ class OrderController extends Controller
         }
     }
 
+    //Updating Order Items In A Cart
+    public function updateItems(Request $request, $id) {
+        $order = Order::where('user_id', $request->user()->id)->findOrFail($id);
+
+        DB::transaction(function () use ($order, $request) {
+            $order->items()->delete();
+            $total = 0;
+
+            foreach ($request->items as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $order->items()->create([
+                    'product_id' => $product->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $product->price
+                ]);
+                $total += $product->price * $item['quantity'];
+            }
+
+            $order->update(['total_price' => $total]);
+        });
+
+        // return response()->json(['message' => 'Order updated successfully.']);
+
+         // Returning full order object (just like store())
+        return response()->json([
+            'message' => 'Order updated successfully.',
+            'order' => $order->load('items.product'),
+        ]);
+    }
+
     // Viewing single order (with its items)
-    public function show($id, Request $request)
-    {
+    public function show($id, Request $request){
         $order = Order::with('items.product')
                     ->where('user_id', $request->user()->id)
                     ->find($id);
